@@ -21,3 +21,4 @@ pickle_data <- read_pickle_file(glue("{PATH}/dados_tcc.pkl"))
 ###########
 
 # DEPRECATED FOR LARGE MEMORY USAGE!!!
+#
