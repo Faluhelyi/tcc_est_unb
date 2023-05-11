@@ -1,76 +1,71 @@
-##############################################################################################
-### Arquivo para alcançar, via web scraping, os dados, da PRF, que serao utilizados no TCC ###
-##############################################################################################
-import pandas as pd
-import numpy as np
-import requests
+##########################################################################################
+### .py para alcançar, via web scraping, os dados, da PRF, que serao utilizados no TCC ###
+##########################################################################################
 from bs4 import BeautifulSoup
-import wget
-import zipfile
-import warnings
-import patoolib
-import shutil
-import os
-import glob
-import matplotlib.pyplot as plt
-import urllib.request
-import pyarrow
+import requests
+from pyunpack import Archive
 
-##########################
-### Dowload .ZIP files ###
-##########################
-warnings.filterwarnings('ignore')
-INPUT_PATH = "C:/Users/Igor/Desktop/TCC"
+##############################
+### Get links for download ###
+##############################
+INPUT_PATH = "C:/Users/u00378/Desktop/tcc_est_unb"
+#INPUT_PATH = "C:/Users/Igor/Desktop/TCC"
+url = 'https://www.gov.br/prf/pt-br/acesso-a-informacao/dados-abertos/dados-abertos-acidentes'
 
-# Request
-r1 = requests.get('https://www.gov.br/prf/pt-br/acesso-a-informacao/dados-abertos/dados-abertos-acidentes')
-r1.status_code
+agent = "Mozilla/5.0 (Windows NT 10.0; Windows; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.114 Safari/537.36"
+# Making a GET request
+r = requests.get(url, headers={"User-Agent": agent})
  
-# We'll save in coverpage the cover page content
-coverpage = r1.content
+# check status code for response received
+# success code - 200
+print(f"Acesso ao site liberado para web scraping" if r.status_code == 200 else f"Acesso negado ao site para web scraping")
 
-# Soup creation
-soup1 = BeautifulSoup(coverpage, 'html.parser')
+# Parsing the HTML
+soup = BeautifulSoup(r.content, 'html.parser') #[2484:2569]
+s = soup.find_all('a', class_= 'external-link')
 
-# useful identification
-coverpage_useful = soup1.find_all('a', class_='external-link')
+links = []
+for i in range(len(s)):
+    links.append(s[i]['href'])
 
-#coverpage_useful = np.delete(coverpage_useful, 6)
-
-# links to dowload
-links = np.array([])
-for i in range(len(coverpage_useful[5:])):
-    links = np.append(links, coverpage_useful[5:][i]['href'])
-
+links = links[4:22]
+links.remove('https://arquivos.prf.gov.br/arquivos/index.php/s/n1T3lymvIdDOzzb')
 
 ids = [i[32:65] for i in links]
-
 urls = [f'https://drive.google.com/u/0/uc?id={i}&export=download' for i in ids]
 
+###########################
+### Download .ZIP files ###
+###########################
+print('BEGINNING OF DOWNLOADS...')
+name = 2023
 for i in range(len(urls)):
     url = urls[i]
-    #headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'}
-    #cookies = {'session_id': 'seu_valor_de_sessao'}
     response = requests.get(url)
-    name = coverpage_useful[5:][i].get_text()
     if response.status_code == 200:
         with open(f'{INPUT_PATH}/dados/zips/{name}.zip', 'wb') as file:
             file.write(response.content)
-        print(f'Arquivo baixado com sucesso: {url}')
+        print(f'Arquivo baixado com sucesso: {name}: {url}')
     else:
         print(f'Falha ao baixar arquivo. Código de resposta: {response.status_code}')
-        print(f'Erro no download do link {url}')
+        print(f'Erro no download de: {name} {url}')
+        print("DOWNLOAD FAILED")
+        break
+    name = name -1
 
-print('END OF THE DOWNLOADS')
-###############################################
-### Extracting .ZIP Archives & reading them ###
-###############################################
+print('END OF DOWNLOADS')
 
-# , outdir='dados'
+################################
+### Extracting .ZIP Archives ###
+################################
+print('BEGINNING OF EXTRACTION...')
+name = 2023
 for i in range(len(urls)):
-    name = coverpage_useful[5:][i].get_text()
     try:
-        patoolib.extract_archive(f'{INPUT_PATH}/dados/zips/{name}.zip', outdir=f'{INPUT_PATH}/dados')
+        Archive(f'{INPUT_PATH}/dados/zips/{name}.zip').extractall(f'{INPUT_PATH}/dados')
+        print(f'O arquivo {name} foi extraído com sucesso.')
     except:
-        print('O arquivo não foi encontrado.')
+        print(f'O arquivo {name} não foi encontrado.')
+    name = name -1
 
+print('END OF EXTRACTION')
