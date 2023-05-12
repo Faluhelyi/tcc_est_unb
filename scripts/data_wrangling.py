@@ -24,3 +24,4 @@ for i in range(1, 17):
 df['data_inversa'] = pd.to_datetime(df['data_inversa'], format = 'mixed', dayfirst=True)
 
 df.to_pickle(f'{INPUT_PATH}/dados/tcc_data.pkl')
+print("Dados salvos com sucesso!")
