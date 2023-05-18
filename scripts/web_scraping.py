@@ -4,16 +4,18 @@
 from bs4 import BeautifulSoup
 import requests
 from pyunpack import Archive
+import zipfile
 
 ##############################
 ### Get links for download ###
 ##############################
-INPUT_PATH = "C:/Users/u00378/Desktop/tcc_est_unb"
-#INPUT_PATH = "C:/Users/Igor/Desktop/TCC"
+#INPUT_PATH = "C:/Users/u00378/Desktop/tcc_est_unb"
+INPUT_PATH = "C:/Users/Igor/Desktop/TCC"
 url = 'https://www.gov.br/prf/pt-br/acesso-a-informacao/dados-abertos/dados-abertos-acidentes'
 
 agent = "Mozilla/5.0 (Windows NT 10.0; Windows; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.114 Safari/537.36"
 # Making a GET request
+# , headers={"User-Agent": agent} in r = requests.get(url)
 r = requests.get(url, headers={"User-Agent": agent})
  
 # check status code for response received
@@ -41,7 +43,7 @@ print('BEGINNING OF DOWNLOADS...')
 name = 2023
 for i in range(len(urls)):
     url = urls[i]
-    response = requests.get(url)
+    response = requests.get(url, stream=True)
     if response.status_code == 200:
         with open(f'{INPUT_PATH}/dados/zips/{name}.zip', 'wb') as file:
             file.write(response.content)
@@ -62,6 +64,8 @@ print('BEGINNING OF EXTRACTION...')
 name = 2023
 for i in range(len(urls)):
     try:
+        #with zipfile.ZipFile(f'{INPUT_PATH}/dados/zips/{name}.zip', 'r') as zip_ref:
+        #    zip_ref.extractall(f'{INPUT_PATH}/dados')
         Archive(f'{INPUT_PATH}/dados/zips/{name}.zip').extractall(f'{INPUT_PATH}/dados')
         print(f'O arquivo {name} foi extraído com sucesso.')
     except:
