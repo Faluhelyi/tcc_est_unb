@@ -9,7 +9,7 @@ import zipfile
 ##############################
 ### Get links for download ###
 ##############################
-#INPUT_PATH = "C:/Users/u00378/Desktop/tcc_est_unb"
+#NPUT_PATH = "C:/Users/u00378/Desktop/tcc_est_unb"
 INPUT_PATH = "C:/Users/Igor/Desktop/TCC"
 url = 'https://www.gov.br/prf/pt-br/acesso-a-informacao/dados-abertos/dados-abertos-acidentes'
 
