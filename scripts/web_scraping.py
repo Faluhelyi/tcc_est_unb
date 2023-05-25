@@ -9,8 +9,8 @@ import zipfile
 ##############################
 ### Get links for download ###
 ##############################
-#NPUT_PATH = "C:/Users/u00378/Desktop/tcc_est_unb"
-INPUT_PATH = "C:/Users/Igor/Desktop/TCC"
+INPUT_PATH = "C:/Users/u00378/Desktop/tcc_est_unb"
+#INPUT_PATH = "C:/Users/Igor/Desktop/TCC"
 url = 'https://www.gov.br/prf/pt-br/acesso-a-informacao/dados-abertos/dados-abertos-acidentes'
 
 agent = "Mozilla/5.0 (Windows NT 10.0; Windows; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.114 Safari/537.36"
