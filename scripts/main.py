@@ -34,3 +34,6 @@ def calculate_smape(actual, forecast) -> float:
         np.mean(\
         np.abs(forecast - actual) / ((np.abs(forecast) + np.abs(actual))/2))*100, \
             2)
+
+def mae(y_hat, y_true):
+    return np.mean(np.abs(y_hat-y_true))

@@ -9,8 +9,8 @@ import sys
 
 np.set_printoptions(threshold=sys.maxsize)
 
-INPUT_PATH = "C:/Users/u00378/Desktop/tcc_est_unb"
-#INPUT_PATH = "C:/Users/Igor/Desktop/TCC"
+#INPUT_PATH = "C:/Users/u00378/Desktop/tcc_est_unb"
+INPUT_PATH = "C:/Users/Igor/Desktop/TCC"
 year = 2007
 df = pd.read_csv(f"{INPUT_PATH}/dados/datatran{year}.csv", encoding='latin1', on_bad_lines='skip', sep =';',\
                  dtype={'br':'object','km':'object'}, na_values='(null)')
